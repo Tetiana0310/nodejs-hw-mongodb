@@ -1,0 +1,6 @@
+PORT=3000
+
+MONGODB_USER=tetianaposmashna
+MONGODB_PASSWORD=LSBifbbj0V7Aivki
+MONGODB_URL=cluster0.9lmyo.mongodb.net
+MONGODB_DB=contacts
