@@ -1,26 +1,24 @@
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import cors from 'cors';
 import pino from 'pino-http';
-import { env } from "./utils/env.js";
-import { getAllContacts, getContactById } from "./services/contacts.js";
+import { env } from './utils/env.js';
+import { getAllContacts, getContactById } from './services/contacts.js';
 
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
-    const app = express();
+  const app = express();
 
-    app.use(cors());
+  app.use(cors());
 
-    app.use(
-  pino({
-    transport: {
-      target: 'pino-pretty',
-    },
-  }),
-    );
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
 
-   
-  
   app.get('/contacts', async (req, res, next) => {
     const contacts = await getAllContacts();
     res.status(200).json({
@@ -53,12 +51,12 @@ export const setupServer = () => {
     }
   });
 
-   app.use('*', (req, res, next) => {
-  res.status(404).json({
-    message: 'Not found',
+  app.use('*', (req, res, next) => {
+    res.status(404).json({
+      message: 'Not found',
+    });
   });
-   });
-  
+
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
