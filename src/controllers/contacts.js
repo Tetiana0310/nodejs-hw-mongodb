@@ -1,4 +1,5 @@
 import { getAllContacts, getContactById } from "../services/contacts";
+import createHttpError from 'http-errors';
 
 export async function getContactsController  (req, res, next)  {
     const contacts = await getAllContacts();
@@ -15,7 +16,7 @@ export async function getContactsController  (req, res, next)  {
       const contact = await getContactById(contactId);
 
       if (!contact) {
-        return res.status(404).json({ message: 'Contact not found' });
+        next (createHttpError(404, 'Route not found'));
       }
 
       res.status(200).json({
