@@ -1,4 +1,4 @@
-import { getAllContacts, getContactById } from "../services/contacts";
+import { createContact, getAllContacts, getContactById } from "../services/contacts";
 import createHttpError from 'http-errors';
 
 export async function getContactsController  (req, res, next)  {
@@ -31,4 +31,14 @@ export async function getContactsController  (req, res, next)  {
       const { status = 500 } = error;
       res.status(status).json({ message: error.message });
     }
-  }
+};
+
+export const createContactController = async (req, res) => {
+  const contact = await createContact(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a contact!',
+    data: contact,
+  });
+};
