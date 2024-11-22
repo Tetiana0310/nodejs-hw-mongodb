@@ -12,8 +12,8 @@ export const initMongoConnection = async () => {
 
     await mongoose.connect(connectionString);
     console.log('Mongo connection successfully established!');
-  } catch (e) {
-    console.log('Error while setting up mongo connection', e);
-    throw e;
+  } catch (err) {
+    console.log('Error while setting up mongo connection', err);
+    throw err;
   }
 };
