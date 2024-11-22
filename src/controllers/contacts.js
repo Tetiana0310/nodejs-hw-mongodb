@@ -47,6 +47,7 @@ export const postContactController = async (req, res) => {
     message: 'Successfully created a contact!',
     data: contact,
   });
+  console.log("Запит на створення контакту", req.body);
 };
 
 export const patchContactController = async (req, res, next) => {

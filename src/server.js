@@ -12,7 +12,8 @@ export const setupServer = () => {
   const app = express();
 
   app.use(cors());
-
+  app.use(express.json());
+  
   app.use(
     pino({
       transport: {
@@ -20,7 +21,8 @@ export const setupServer = () => {
       },
     }),
   );
-  app.use(contactsRouter);
+
+  app.use('/contacts', contactsRouter);
   app.use('*', notFoundHandler);
   app.use(errorHandler);
 

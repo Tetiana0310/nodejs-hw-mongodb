@@ -11,6 +11,9 @@ export const getContactById = async (contactId) => {
 };
 
 export const createContact = async (payload) => {
+  if (!payload.name || !payload.phoneNumber || !payload.contactType) {
+    throw new Error("Обов'язкові поля name, phoneNumber та contactType відсутні");
+  }
   const contact = await ContactsCollection.create(payload);
   return contact;
 };
