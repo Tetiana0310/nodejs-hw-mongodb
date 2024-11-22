@@ -7,7 +7,7 @@ export const initMongoConnection = async () => {
     const pwd = env('MONGODB_PASSWORD');
     const url = env('MONGODB_URL');
     const db = env('MONGODB_DB');
-
+console.log(`Підготовка до підключення до MongoDB на адресу: ${url}`);
     const connectionString = `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority`;
 
     await mongoose.connect(connectionString);
