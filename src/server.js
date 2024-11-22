@@ -6,7 +6,6 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import contactsRouter from './routers/contacts.js';
 
-
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
@@ -21,7 +20,7 @@ export const setupServer = () => {
       },
     }),
   );
-app.use(contactsRouter);
+  app.use(contactsRouter);
   app.use('*', notFoundHandler);
   app.use(errorHandler);
 

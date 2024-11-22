@@ -4,9 +4,9 @@ import {
   getContactsController,
   postContactController,
   patchContactController,
-  deleteContactController
-} from '../controllers/contacts';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
+  deleteContactController,
+} from '../controllers/contacts.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
