@@ -3,7 +3,7 @@ export function ctrlWrapper(controller) {
     try {
       await controller(req, res, next);
     } catch (error) {
-      next(error);
+      next (error);
     }
   };
 }
