@@ -22,7 +22,7 @@ export async function getContactController(req, res, next) {
     const contact = await getContactById(contactId);
 
     if (!contact) {
-      throw createHttpError(404, 'Route not found');
+      throw createHttpError(404, 'Contact not found');
     }
 
     res.status(200).json({
