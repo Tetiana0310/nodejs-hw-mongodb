@@ -1,7 +1,13 @@
+import { SORT_ORDER } from '../constants/index.js';
 import { ContactsCollection } from '../db/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllContacts = async ({ page, perPage }) => {
+export const getAllContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = '_id',
+}) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
@@ -9,10 +15,11 @@ export const getAllContacts = async ({ page, perPage }) => {
 
   const contacts = await contactsQuery
     .skip(skip)
-    .limit(limit);
- 
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder })
+    .exec();
 
-   const contactsCount = await ContactsCollection.find().countDocuments();
+  const contactsCount = await ContactsCollection.find().countDocuments();
 
   const paginationData = calculatePaginationData({
     total: contactsCount,
@@ -20,7 +27,6 @@ export const getAllContacts = async ({ page, perPage }) => {
     perPage,
   });
   return { data: contacts, ...paginationData };
-
 };
 
 export const getContactById = async (contactId) => {
@@ -30,7 +36,9 @@ export const getContactById = async (contactId) => {
 
 export const createContact = async (payload) => {
   if (!payload.name || !payload.phoneNumber || !payload.contactType) {
-    throw new Error("Обов'язкові поля name, phoneNumber та contactType відсутні");
+    throw new Error(
+      "Обов'язкові поля name, phoneNumber та contactType відсутні",
+    );
   }
   const contact = await ContactsCollection.create(payload);
   return contact;
