@@ -17,7 +17,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 const router = Router();
 
 router.get('/', ctrlWrapper(getContactsController));
-router.get('/:contactId', ctrlWrapper(getContactController));
+router.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 router.post(
   '/',
   validateBody(createContactSchema),
@@ -29,6 +29,6 @@ router.patch(
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
-router.delete('/:contactId', ctrlWrapper(deleteContactController));
+router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
 export default router;
