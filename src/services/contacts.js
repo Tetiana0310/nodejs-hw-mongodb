@@ -13,15 +13,17 @@ export const getAllContacts = async ({
 
   const contactsQuery = ContactsCollection.find();
 
+  const contactsCount = await ContactsCollection.find()
+    .merge(contactsQuery)
+    .countDocuments();
+  
   const contacts = await contactsQuery
     .skip(skip)
     .limit(limit)
     .sort({ [sortBy]: sortOrder })
     .exec();
 
-  const contactsCount = await ContactsCollection.find()
-    .merge(contactsQuery)
-    .countDocuments();
+  
 
   const paginationData = calculatePaginationData(contactsCount, page, perPage);
   return { data: contacts, ...paginationData };
