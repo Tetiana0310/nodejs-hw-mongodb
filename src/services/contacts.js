@@ -13,9 +13,7 @@ export const getAllContacts = async ({
 
   const contactsQuery = ContactsCollection.find();
 
-  const contactsCount = await ContactsCollection.find()
-    .merge(contactsQuery)
-    .countDocuments();
+  const contactsCount = await ContactsCollection.countDocuments();
   
   const contacts = await contactsQuery
     .skip(skip)
