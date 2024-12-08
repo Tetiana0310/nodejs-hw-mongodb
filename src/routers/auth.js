@@ -13,7 +13,7 @@ const authRouter = Router();
 
 authRouter.post(
   '/register',
-  validateBody(registerUserSchema),
+  validateBody(registerUserSchema), 
   ctrlWrapper(registerUserController),
 );
 
@@ -24,7 +24,7 @@ authRouter.post(
 );
 
 authRouter.post('/logout', ctrlWrapper(logoutUserController));
-
 authRouter.post('/refresh', ctrlWrapper(refreshUserSessionController));
 
 export default authRouter;
+

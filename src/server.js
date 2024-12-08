@@ -4,9 +4,8 @@ import pino from 'pino-http';
 import { env } from './utils/env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import contactsRouter from './routers/contacts.js';
 import cookieParser from 'cookie-parser';
-import router from './routers/contacts.js';
+import router from './routers/index.js'; 
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -25,15 +24,9 @@ export const setupServer = () => {
     }),
   );
 
-  app.use(router);
-  app._router.stack.forEach((r) => {
-  if (r.route && r.route.path) {
-    console.log(`Registered route: ${r.route.path}`);
-  }
-});
+  
+  app.use(router); 
 
-
-  app.use('/contacts', contactsRouter);
   app.use('*', notFoundHandler);
   app.use(errorHandler);
 
