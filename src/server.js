@@ -5,7 +5,8 @@ import { env } from './utils/env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import contactsRouter from './routers/contacts.js';
-import authRouter from './routers/auth.js';
+import cookieParser from 'cookie-parser';
+import router from './routers/contacts.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -14,6 +15,7 @@ export const setupServer = () => {
 
   app.use(cors());
   app.use(express.json());
+  app.use(cookieParser());
 
   app.use(
     pino({
@@ -22,7 +24,15 @@ export const setupServer = () => {
       },
     }),
   );
-  app.use('/auth', authRouter);
+
+  app.use(router);
+  app._router.stack.forEach((r) => {
+  if (r.route && r.route.path) {
+    console.log(`Registered route: ${r.route.path}`);
+  }
+});
+
+
   app.use('/contacts', contactsRouter);
   app.use('*', notFoundHandler);
   app.use(errorHandler);
