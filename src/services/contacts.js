@@ -43,15 +43,14 @@ export const createContact = async (payload, userId) => {
   return contact;
 };
 
-export const updateContact = async (
-  contactId,
-  userId,
-  payload,
-  options = {},
-) => {
+export const updateContact = async (contactId, userId, payload, options = {}) => {
+
+  const contactIdStr = String(contactId);
+  const userIdStr = String(userId);
+
   if (
-    !contactId.match(/^[0-9a-fA-F]{24}$/) ||
-    !userId.match(/^[0-9a-fA-F]{24}$/)
+    !contactIdStr.match(/^[0-9a-fA-F]{24}$/) ||
+    !userIdStr.match(/^[0-9a-fA-F]{24}$/)
   ) {
     throw new Error('Invalid ID format');
   }
@@ -70,7 +69,7 @@ export const updateContact = async (
   }
 
   return {
-    contact: result,
+    contact: result, /
   };
 };
 
