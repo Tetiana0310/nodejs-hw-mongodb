@@ -12,17 +12,15 @@ export const getAllContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const contactsQuery = ContactsCollection.find({userId});
+  const contactsQuery = ContactsCollection.find({ userId });
 
-  const contactsCount = await ContactsCollection.countDocuments({userId});
+  const contactsCount = await ContactsCollection.countDocuments({ userId });
 
   const contacts = await contactsQuery
     .skip(skip)
     .limit(limit)
     .sort({ [sortBy]: sortOrder })
     .exec();
-
-
 
   const paginationData = calculatePaginationData(contactsCount, page, perPage);
   return { data: contacts, ...paginationData };
@@ -45,26 +43,41 @@ export const createContact = async (payload, userId) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, userId, options = {}) => {
-  const rawResult = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId, userId},
+export const updateContact = async (
+  contactId,
+  userId,
+  payload,
+  options = {},
+) => {
+  if (
+    !contactId.match(/^[0-9a-fA-F]{24}$/) ||
+    !userId.match(/^[0-9a-fA-F]{24}$/)
+  ) {
+    throw new Error('Invalid ID format');
+  }
+
+  const result = await ContactsCollection.findOneAndUpdate(
+    { _id: contactId, userId },
     payload,
     {
       new: true,
-      includeResultMetadata: true,
       ...options,
     },
   );
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!result) {
+    return null;
+  }
 
   return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    contact: result,
   };
 };
 
 export const deleteContact = async (contactId, userId) => {
-  const contact = await ContactsCollection.findOneAndDelete({ _id: contactId, userId });
+  const contact = await ContactsCollection.findOneAndDelete({
+    _id: contactId,
+    userId,
+  });
   return contact;
 };
