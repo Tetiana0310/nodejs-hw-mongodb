@@ -166,9 +166,12 @@ export const resetPassword = async (payload) => {
   }
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
+  await SessionsCollection.deleteMany({ userId: user._id });
 
-  return UsersCollection.updateOne(
+  await UsersCollection.updateOne(
     { _id: user._id },
     { password: encryptedPassword },
   );
+
+  return { message: 'Password reset successful' };
 };
