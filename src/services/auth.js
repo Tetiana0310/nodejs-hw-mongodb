@@ -5,7 +5,6 @@ import { UsersCollection } from '../db/models/user.js';
 import { FIFTEEN_MINUTES, ONE_DAY, TEMPLATES_DIR } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 import jwt from 'jsonwebtoken';
-import { SMTP } from '../constants/index.js';
 import { env } from '../utils/env.js';
 import handlebars from 'handlebars';
 import path from 'node:path';
@@ -105,12 +104,12 @@ export const requestResetToken = async (email) => {
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
+
   const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
     },
-
     env('JWT_SECRET'),
     {
       expiresIn: '15m',
@@ -132,12 +131,19 @@ export const requestResetToken = async (email) => {
     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
 
-  await sendEmail({
-    from: env(SMTP.SMTP_FROM),
-    to: email,
-    subject: 'Reset your password',
-    html,
-  });
+  try {
+    await sendEmail({
+      from: env('SMTP_FROM'),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
 };
 
 export const resetPassword = async (payload) => {
