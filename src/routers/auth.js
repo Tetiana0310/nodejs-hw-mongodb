@@ -5,6 +5,7 @@ import {
   loginUserSchema,
   requestResetEmailSchema,
   resetPasswordShcema,
+  resetPasswordSchema,
 } from '../validation/auth.js';
 import {
   loginUserController,
@@ -41,7 +42,7 @@ authRouter.post(
 
 authRouter.post(
   '/reset-pwd',
-  validateBody(resetPasswordShcema),
+  validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
 );
 
