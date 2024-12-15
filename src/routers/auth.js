@@ -4,7 +4,6 @@ import {
   registerUserSchema,
   loginUserSchema,
   requestResetEmailSchema,
-  resetPasswordShcema,
   resetPasswordSchema,
 } from '../validation/auth.js';
 import {
