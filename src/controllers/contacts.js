@@ -15,9 +15,7 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export async function getContactsController(req, res, next) {
   const { page, perPage } = parsePaginationParams(req.query);
-
   const { sortBy, sortOrder } = parseSortParams(req.query);
-
   const filter = parseFilterParams(req.query, req.user._id);
 
   filter.userId = req.user._id;
@@ -56,10 +54,26 @@ export async function getContactController(req, res, next) {
   });
 }
 
-export const postContactController = async (req, res) => {
+export const postContactController = async (req, res, next) => {
   const userId = req.user._id;
+  const photo = req.file;
+  let photoUrl = null;
 
-  const contact = await createContact(req.body, userId);
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const contactData = {
+    ...req.body,
+    userId,
+    photo: photoUrl,
+  };
+
+  const contact = await createContact(contactData);
 
   res.status(201).json({
     status: 201,
@@ -72,8 +86,7 @@ export const postContactController = async (req, res) => {
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const photo = req.file;
-
-  let photoUrl;
+  let photoUrl = null;
 
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
@@ -83,22 +96,25 @@ export const patchContactController = async (req, res, next) => {
     }
   }
 
-  const result = await updateContact(contactId, {
+  const updatedData = {
     ...req.body,
     photo: photoUrl,
-  });
+  };
+
+  const result = await updateContact(contactId, updatedData);
 
   if (!result) {
-    next(createHttpError(404, 'Student not found'));
+    next(createHttpError(404, 'Contact not found'));
     return;
   }
 
-  res.json({
+  res.status(200).json({
     status: 200,
-    message: `Successfully patched a student!`,
-    data: result.student,
+    message: 'Successfully updated contact!',
+    data: result,
   });
 };
+
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
