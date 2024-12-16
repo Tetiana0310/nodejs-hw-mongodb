@@ -85,8 +85,10 @@ export const postContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
+  const userId = req.user._id;
   const photo = req.file;
   let photoUrl = null;
+
 
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
@@ -101,7 +103,7 @@ export const patchContactController = async (req, res, next) => {
     photo: photoUrl,
   };
 
-  const result = await updateContact(contactId, updatedData);
+  const result = await updateContact(contactId, userId, updatedData);
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
@@ -111,7 +113,7 @@ export const patchContactController = async (req, res, next) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully updated contact!',
-    data: result,
+    data: result.contact,
   });
 };
 
